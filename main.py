@@ -1,9 +1,9 @@
+import pickle
 from logging import INFO
 from logging import basicConfig
 from logging import getLogger
 from time import time
 
-import pickle
 import pandas as pd
 
 
