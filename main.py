@@ -13,6 +13,7 @@ def clean(arg, omit):
     tokens = [token.lower() for token in tokens]
     tokens = [token for token in tokens if token not in {'\t', '\n'} and token not in omit]
     tokens = [token for token in tokens if not str(token).isdigit() and not str(token).isdecimal()]
+    tokens = [token[:-1] if str(token).endswith(',') or str(token).endswith('.') else token for token in tokens]
     # todo remove punctuation
     result = ' '.join(tokens)
     return result
@@ -61,7 +62,7 @@ if __name__ == '__main__':
 
     flat_scores = [(key, value) for key, value in scores.items()]
     flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True)
-
-    print()
+    top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
+    logger.info(top_flat_scores)
 
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
