@@ -24,7 +24,6 @@ def clean(arg, omit):
         for token in tokens:
             if str(token).endswith(symbol) or str(token).startswith(symbol):
                 print('{}'.format(token, ))
-    # todo remove punctuation
     result = ' '.join(tokens)
     return result
 
