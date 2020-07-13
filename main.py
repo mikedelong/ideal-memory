@@ -20,10 +20,6 @@ def clean(arg, omit):
               else token for token in tokens]
     tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
               else token for token in tokens]
-    for symbol in punctuation:
-        for token in tokens:
-            if str(token).endswith(symbol) or str(token).startswith(symbol):
-                print('{}'.format(token, ))
     result = ' '.join(tokens)
     return result
 
