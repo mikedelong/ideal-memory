@@ -6,6 +6,7 @@ from time import time
 
 import pandas as pd
 from collections import Counter
+from string import punctuation
 
 
 def clean(arg, omit):
@@ -13,7 +14,16 @@ def clean(arg, omit):
     tokens = [token.lower() for token in tokens]
     tokens = [token for token in tokens if token not in {'\t', '\n'} and token not in omit]
     tokens = [token for token in tokens if not str(token).isdigit() and not str(token).isdecimal()]
-    tokens = [token[:-1] if str(token).endswith(',') or str(token).endswith('.') else token for token in tokens]
+    tokens = [token.replace('_', '', ).replace('*', '', ).replace('"', '', ) for token in tokens]
+    tokens = [token.replace('(', '', ).replace(')', '', ).replace('[', '',).replace(']', '', ) for token in tokens]
+    tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
+              else token for token in tokens]
+    tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
+              else token for token in tokens]
+    for symbol in punctuation:
+        for token in tokens:
+            if str(token).endswith(symbol) or str(token).startswith(symbol):
+                print('{}'.format(token, ))
     # todo remove punctuation
     result = ' '.join(tokens)
     return result
@@ -45,7 +55,7 @@ if __name__ == '__main__':
     train_df = pd.read_csv(filepath_or_buffer=input_file, usecols=all_columns, )
     logger.info('headers: {}'.format(list(train_df, ), ))
     logger.info(train_df['Classification'].value_counts(), )
-    train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords, ))
+    train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
     negative_df = train_df[train_df['Classification'] == 0]
 
@@ -58,7 +68,7 @@ if __name__ == '__main__':
         if word in positive_count.keys():
             word_count = count[word]
             if word_count > 5:
-                scores[word] = positive_count[word]/word_count
+                scores[word] = positive_count[word] / word_count
 
     flat_scores = [(key, value) for key, value in scores.items()]
     flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True)
