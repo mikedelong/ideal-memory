@@ -1,12 +1,12 @@
 import pickle
+from collections import Counter
 from logging import INFO
 from logging import basicConfig
 from logging import getLogger
+from string import punctuation
 from time import time
 
 import pandas as pd
-from collections import Counter
-from string import punctuation
 
 
 def clean(arg, omit):
