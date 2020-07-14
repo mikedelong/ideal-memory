@@ -10,6 +10,7 @@ import pandas as pd
 
 from spam_classifier import SpamClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
 
 def clean(arg, omit):
@@ -76,14 +77,18 @@ if __name__ == '__main__':
 
     logger.info('building spam classifer')
     method_ = 'tf-idf'
-    rename_ = {'clean': 'message', 'Classification': 'label', }
-    columns_ = rename_.keys()
-    random_state_ = 1
+    run_count = 20
     test_size_ = 0.1
-    X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
-                                                        random_state=random_state_, test_size=test_size_, )
-    train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
-    classifier = SpamClassifier(method=method_, train_data=train_data_, )
-    y_predicted = classifier.predict(test_data=y_test)
+    for random_state_ in range(run_count):
+        X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                            random_state=random_state_, test_size=test_size_, )
+        train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
+        classifier = SpamClassifier(method=method_, train_data=train_data_, )
+        y_predicted = classifier.predict(test_data=y_test, )
+        y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+        logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
 
+        if random_state_ == run_count - 1:
+            logger.info('bogus accuracy: {:5.2f}'.format(
+                accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
