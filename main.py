@@ -9,6 +9,7 @@ from time import time
 import pandas as pd
 
 from spam_classifier import SpamClassifier
+from sklearn.model_selection import train_test_split
 
 
 def clean(arg, omit):
@@ -52,6 +53,7 @@ if __name__ == '__main__':
     train_df = pd.read_csv(filepath_or_buffer=input_file, usecols=all_columns, )
     logger.info('headers: {}'.format(list(train_df, ), ))
     logger.info(train_df['Classification'].value_counts().to_dict(), )
+    logger.info('cleaning training data')
     train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
     negative_df = train_df[train_df['Classification'] == 0]
@@ -72,9 +74,16 @@ if __name__ == '__main__':
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
     logger.info(top_flat_scores)
 
+    logger.info('building spam classifer')
     method_ = 'tf-idf'
     rename_ = {'clean': 'message', 'Classification': 'label', }
     columns_ = rename_.keys()
-    classifier = SpamClassifier(method=method_, train_data=train_df[columns_].rename(rename_, axis='columns'), )
+    random_state_ = 1
+    test_size_ = 0.1
+    X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                        random_state=random_state_, test_size=test_size_, )
+    train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
+    classifier = SpamClassifier(method=method_, train_data=train_data_, )
+    y_predicted = classifier.predict(test_data=y_test)
 
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
