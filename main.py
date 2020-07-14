@@ -84,7 +84,7 @@ if __name__ == '__main__':
                                                             random_state=random_state_, test_size=test_size_, )
         train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
         classifier = SpamClassifier(method=method_, train_data=train_data_, )
-        y_predicted = classifier.predict(test_data=y_test, )
+        y_predicted = classifier.predict(test_data=X_test, )
         y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
         logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
 
