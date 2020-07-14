@@ -7,6 +7,7 @@ from string import punctuation
 from time import time
 
 import pandas as pd
+from spam_classifier import SpamClassifier
 
 
 def clean(arg, omit):
@@ -15,7 +16,7 @@ def clean(arg, omit):
     tokens = [token for token in tokens if token not in {'\t', '\n'} and token not in omit]
     tokens = [token for token in tokens if not str(token).isdigit() and not str(token).isdecimal()]
     tokens = [token.replace('_', '', ).replace('*', '', ).replace('"', '', ) for token in tokens]
-    tokens = [token.replace('(', '', ).replace(')', '', ).replace('[', '',).replace(']', '', ) for token in tokens]
+    tokens = [token.replace('(', '', ).replace(')', '', ).replace('[', '', ).replace(']', '', ) for token in tokens]
     tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
               else token for token in tokens]
     tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
@@ -69,5 +70,10 @@ if __name__ == '__main__':
     flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True)
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
     logger.info(top_flat_scores)
+
+    method_ = 'tf-idf'
+    rename_ = {'clean': 'message', 'Classification': 'label', }
+    columns_ = rename_.keys()
+    classifier = SpamClassifier(method=method_, train_data=train_df[columns_].rename(rename_, axis='columns'), )
 
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
