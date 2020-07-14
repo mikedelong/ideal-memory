@@ -50,7 +50,7 @@ if __name__ == '__main__':
     all_columns = ['Clause ID', 'Clause Text', 'Classification', ]
     train_df = pd.read_csv(filepath_or_buffer=input_file, usecols=all_columns, )
     logger.info('headers: {}'.format(list(train_df, ), ))
-    logger.info(train_df['Classification'].value_counts(), )
+    logger.info(train_df['Classification'].value_counts().to_dict(), )
     train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
     negative_df = train_df[train_df['Classification'] == 0]
