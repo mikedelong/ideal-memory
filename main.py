@@ -91,6 +91,6 @@ if __name__ == '__main__':
         logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
 
         if random_state_ == random_states[-1]:
-            logger.info('bogus accuracy: {:5.2f}'.format(
+            logger.info('dummy classifier accuracy: {:5.2f}'.format(
                 accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
