@@ -7,10 +7,10 @@ from string import punctuation
 from time import time
 
 import pandas as pd
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 
 from spam_classifier import SpamClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 
 
 def clean(arg, omit):
