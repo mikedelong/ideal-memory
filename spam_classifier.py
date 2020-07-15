@@ -27,7 +27,7 @@ def process_message(message, lower_case=True, stem=True, stop_words=True, gram=2
 
 
 class SpamClassifier(object):
-    def __init__(self, train_data, method='tf-idf'):
+    def __init__(self, train_data, grams=2, method='tf-idf', ):
         self.mails, self.labels = train_data['message'], train_data['label']
         self.method = method
         self.prob_spam = dict()
@@ -45,6 +45,7 @@ class SpamClassifier(object):
         self.ham_mails = 0
         self.sum_tf_idf_spam = 0
         self.sum_tf_idf_ham = 0
+        self.grams = grams
 
     def train(self):
         self.calc_tf_and_idf()
@@ -73,7 +74,7 @@ class SpamClassifier(object):
         self.idf_spam = dict()
         self.idf_ham = dict()
         for i in range(message_count):
-            message_processed = process_message(self.mails[i])
+            message_processed = process_message(self.mails[i], gram=self.grams, )
             count = list()  # To keep track of whether the word has occurred in the message or not.
             # For IDF
             for word in message_processed:
@@ -137,6 +138,6 @@ class SpamClassifier(object):
     def predict(self, test_data):
         result = dict()
         for (i, message) in enumerate(test_data):
-            processed_message = process_message(message)
+            processed_message = process_message(message, gram=self.grams, )
             result[i] = int(self.classify(processed_message))
         return result
