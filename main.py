@@ -53,9 +53,9 @@ if __name__ == '__main__':
     all_columns = ['Clause ID', 'Clause Text', 'Classification', ]
     train_df = pd.read_csv(filepath_or_buffer=input_file, usecols=all_columns, )
     logger.info('headers: {}'.format(list(train_df, ), ), )
-    logger.info(train_df['Classification',].value_counts().to_dict(), )
+    logger.info(train_df['Classification'].value_counts().to_dict(), )
     logger.info('cleaning training data', )
-    train_df['clean'] = train_df['Clause Text',].apply(clean, args=(stopwords,))
+    train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
     negative_df = train_df[train_df['Classification'] == 0]
 
@@ -69,8 +69,7 @@ if __name__ == '__main__':
             if word_count > 5:
                 scores[word] = positive_count[word] / word_count
 
-    flat_scores = [(key, value) for key, value in scores.items()]
-    flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True,)
+    flat_scores = sorted([(key, value) for key, value in scores.items()], key=lambda x: x[1], reverse=True,)
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
     logger.info(top_flat_scores)
 
