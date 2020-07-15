@@ -74,7 +74,7 @@ class SpamClassifier(object):
         self.idf_ham = dict()
         for i in range(message_count):
             message_processed = process_message(self.mails[i])
-            count = list()  # To keep track of whether the word has ocured in the message or not.
+            count = list()  # To keep track of whether the word has occurred in the message or not.
             # For IDF
             for word in message_processed:
                 if self.labels[i]:
