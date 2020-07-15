@@ -76,7 +76,7 @@ if __name__ == '__main__':
     logger.info(top_flat_scores)
 
     logger.info('building spam classifier')
-    method_ = ['bow', 'tf-idf'][1]
+    method_ = ['bow', 'tf-idf'][0]
     run_count = 5
     test_size_ = 0.1
     random_states = list(range(1, run_count+1))
