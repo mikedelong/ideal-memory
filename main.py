@@ -79,7 +79,8 @@ if __name__ == '__main__':
     method_ = 'tf-idf'
     run_count = 20
     test_size_ = 0.1
-    for random_state_ in range(run_count):
+    random_states = list(range(1, run_count+1))
+    for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
         train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
@@ -88,7 +89,7 @@ if __name__ == '__main__':
         y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
         logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
 
-        if random_state_ == run_count - 1:
+        if random_state_ == random_states[-1]:
             logger.info('bogus accuracy: {:5.2f}'.format(
                 accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
