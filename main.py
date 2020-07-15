@@ -75,16 +75,17 @@ if __name__ == '__main__':
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
     logger.info(top_flat_scores)
 
-    logger.info('building spam classifer')
-    method_ = 'tf-idf'
+    logger.info('building spam classifier')
+    method_ = ['bow', 'tf-idf'][1]
     run_count = 20
     test_size_ = 0.1
     random_states = list(range(1, run_count+1))
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
-        train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, )
+        train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
         classifier = SpamClassifier(method=method_, train_data=train_data_, )
+        classifier.train()
         y_predicted = classifier.predict(test_data=X_test, )
         y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
         logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
