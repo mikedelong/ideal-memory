@@ -39,29 +39,28 @@ if __name__ == '__main__':
     basicConfig(format='%(asctime)s : %(name)s : %(levelname)s : %(message)s', level=INFO, )
     logger.info('started.', )
 
-    with open('./stopwords.txt', 'r') as stopwords_fp:
+    with open(file='./stopwords.txt', mode='r') as stopwords_fp:
         stopwords = stopwords_fp.readlines()
-    logger.info('stop word count: {}'.format(len(stopwords)))
+    logger.info('stop word count: {}'.format(len(stopwords, ), ), )
 
     train_pkl = './reference/train.pkl'
-    logger.info('loading pickled data from {}'.format(train_pkl))
-    with open(file=train_pkl, mode='rb') as pickle_fp:
-        examples = pickle.load(pickle_fp)
+    logger.info('loading pickled data from {}'.format(train_pkl, ), )
+    with open(file=train_pkl, mode='rb', ) as pickle_fp:
+        examples = pickle.load(pickle_fp, )
 
     input_file = './data/AI_ML_Challenge_Training_Data_Set_1_v1.csv'
-    logger.info('loading training data from {}'.format(input_file))
+    logger.info('loading training data from {}'.format(input_file, ), )
     all_columns = ['Clause ID', 'Clause Text', 'Classification', ]
     train_df = pd.read_csv(filepath_or_buffer=input_file, usecols=all_columns, )
-    logger.info('headers: {}'.format(list(train_df, ), ))
-    logger.info(train_df['Classification'].value_counts().to_dict(), )
-    logger.info('cleaning training data')
-    train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
+    logger.info('headers: {}'.format(list(train_df, ), ), )
+    logger.info(train_df['Classification',].value_counts().to_dict(), )
+    logger.info('cleaning training data', )
+    train_df['clean'] = train_df['Clause Text',].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
     negative_df = train_df[train_df['Classification'] == 0]
 
     count = dict(collect(train_df.clean))
     positive_count = dict(collect(positive_df.clean))
-    negative_count = dict(collect(negative_df.clean))
 
     scores = dict()
     for word in dict(count).keys():
@@ -71,7 +70,7 @@ if __name__ == '__main__':
                 scores[word] = positive_count[word] / word_count
 
     flat_scores = [(key, value) for key, value in scores.items()]
-    flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True)
+    flat_scores = sorted(flat_scores, key=lambda x: x[1], reverse=True,)
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
     logger.info(top_flat_scores)
 
@@ -79,7 +78,7 @@ if __name__ == '__main__':
     method_ = ['bow', 'tf-idf'][0]
     run_count = 5
     test_size_ = 0.1
-    random_states = list(range(1, run_count+1))
+    random_states = list(range(1, run_count + 1))
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
