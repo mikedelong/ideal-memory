@@ -69,26 +69,30 @@ if __name__ == '__main__':
             if word_count > 5:
                 scores[word] = positive_count[word] / word_count
 
-    flat_scores = sorted([(key, value) for key, value in scores.items()], key=lambda x: x[1], reverse=True,)
+    flat_scores = sorted([(key, value) for key, value in scores.items()], key=lambda x: x[1], reverse=True, )
     top_flat_scores = [item for item in flat_scores if 1 > item[1] > 0.9]
-    logger.info(top_flat_scores)
+    for score in top_flat_scores:
+        logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
     logger.info('building spam classifier')
-    method_ = ['bow', 'tf-idf'][0]
-    run_count = 5
+    methods = ['bow', 'tf-idf']
+    run_count = 40
     test_size_ = 0.1
     random_states = list(range(1, run_count + 1))
-    for random_state_ in random_states:
-        X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
-                                                            random_state=random_state_, test_size=test_size_, )
-        train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
-        classifier = SpamClassifier(method=method_, train_data=train_data_, )
-        classifier.train()
-        y_predicted = classifier.predict(test_data=X_test, )
-        y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
-        logger.info('accuracy: {:5.2f}'.format(accuracy_score(y_pred=y_predicted, y_true=y_test, )))
+    for method in methods:
+        for random_state_ in random_states:
+            X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                                random_state=random_state_, test_size=test_size_, )
+            train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
+            classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+            classifier.train()
+            y_predicted = classifier.predict(test_data=X_test, )
+            y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+            accuracy_format = 'method: {} accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
 
-        if random_state_ == random_states[-1]:
-            logger.info('dummy classifier accuracy: {:5.2f}'.format(
-                accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )))
+            accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
+            dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
+            difference = 100 * (accuracy - dummy_accuracy)
+            logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
+
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
