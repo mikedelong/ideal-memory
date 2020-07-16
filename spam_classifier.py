@@ -51,8 +51,10 @@ class SpamClassifier(object):
         self.calc_tf_and_idf()
         if self.method == 'tf-idf':
             self.calc_tf_idf()
-        else:
+        elif self.method == 'bow':
             self.calc_prob()
+        else:
+            raise NotImplementedError('method {} not implemented'.format(self.method))
 
     def calc_prob(self):
         self.prob_spam = dict()
@@ -122,15 +124,20 @@ class SpamClassifier(object):
             else:
                 if self.method == 'tf-idf':
                     p_spam -= log(self.sum_tf_idf_spam + len(list(self.prob_spam.keys())))
-                else:
+                elif self.method == 'bow':
                     p_spam -= log(self.spam_words + len(list(self.prob_spam.keys())))
+                else:
+                    raise NotImplementedError('method {} not implemented'.format(self.method))
             if word in self.prob_ham:
                 p_ham += log(self.prob_ham[word])
             else:
                 if self.method == 'tf-idf':
                     p_ham -= log(self.sum_tf_idf_ham + len(list(self.prob_ham.keys())))
-                else:
+                elif self.method == 'bow':
                     p_ham -= log(self.ham_words + len(list(self.prob_ham.keys())))
+                else:
+                    raise NotImplementedError('method {} not implemented'.format(self.method))
+
             p_spam += log(self.prob_spam_mail)
             p_ham += log(self.prob_ham_mail)
         return p_spam >= p_ham
