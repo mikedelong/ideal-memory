@@ -113,5 +113,7 @@ if __name__ == '__main__':
             dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
             difference = 100 * (accuracy - dummy_accuracy)
             logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ))
+    else:
+        raise NotImplementedError('classifier not implemented: {}'.format(which_classifier))
 
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
