@@ -7,8 +7,10 @@ from string import punctuation
 from time import time
 
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
 
 from spam_classifier import SpamClassifier
 
@@ -74,7 +76,7 @@ if __name__ == '__main__':
     for score in top_flat_scores:
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
-    which_classifier = 0
+    which_classifier = 1
     if which_classifier == 0:
         logger.info('building spam classifier')
         methods = ['bow', 'tf-idf']
@@ -97,6 +99,22 @@ if __name__ == '__main__':
                 difference = 100 * (accuracy - dummy_accuracy)
                 logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
         else:
-            pass
+            run_count = 40
+            test_size_ = 0.1
+            random_states = list(range(1, run_count + 1))
+            for random_state_ in random_states:
+                X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                                    random_state=random_state_, test_size=test_size_, )
+                vectorizer = CountVectorizer()
+                counts = vectorizer.fit_transform(X_train.values, )
+                classifier = MultinomialNB()
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=X_test, )
+                accuracy_format = 'naive Bayes: accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
+
+                accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
+                dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
+                difference = 100 * (accuracy - dummy_accuracy)
+                logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ))
 
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
