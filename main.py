@@ -77,12 +77,12 @@ if __name__ == '__main__':
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
     which_classifier = 1
+    run_count = 40
+    test_size_ = 0.1
+    random_states = list(range(1, run_count + 1))
     if which_classifier == 0:
         logger.info('building spam classifier')
         methods = ['bow', 'tf-idf']
-        run_count = 40
-        test_size_ = 0.1
-        random_states = list(range(1, run_count + 1))
         for method in methods:
             for random_state_ in random_states:
                 X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
@@ -99,17 +99,14 @@ if __name__ == '__main__':
                 difference = 100 * (accuracy - dummy_accuracy)
                 logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
     elif which_classifier == 1:
-        run_count = 40
-        test_size_ = 0.1
-        random_states = list(range(1, run_count + 1))
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
-            vectorizer = CountVectorizer()
-            counts = vectorizer.fit_transform(X_train.values, )
+            count_vectorizer = CountVectorizer()
+            counts = count_vectorizer.fit_transform(X_train.values, )
             classifier = MultinomialNB()
             classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=vectorizer.transform(X_test), )
+            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
             accuracy_format = 'naive Bayes: accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
 
             accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
