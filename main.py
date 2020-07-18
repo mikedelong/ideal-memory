@@ -109,7 +109,7 @@ if __name__ == '__main__':
             counts = vectorizer.fit_transform(X_train.values, )
             classifier = MultinomialNB()
             classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=X_test, )
+            y_predicted = classifier.predict(X=vectorizer.transform(X_test), )
             accuracy_format = 'naive Bayes: accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
 
             accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
