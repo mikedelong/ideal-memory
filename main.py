@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
 
 from spam_classifier import SpamClassifier
 
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     for score in top_flat_scores:
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
-    which_classifier = 2
+    which_classifier = 3
     run_count = 40
     test_size_ = 0.1
     random_states = list(range(1, run_count + 1))
@@ -107,12 +108,12 @@ if __name__ == '__main__':
             classifier = MultinomialNB()
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-            accuracy_format = 'Bayes/count: accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
-
+            ones = sum(y_predicted)
+            accuracy_format = 'Bayes/count: accuracy: {:5.2f} dummy accuracy: {:5.2f} difference: {:5.2f} count: {}'
             accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
             dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
             difference = 100 * (accuracy - dummy_accuracy)
-            logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ))
+            logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ones, ))
     elif which_classifier == 2:
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
@@ -124,6 +125,22 @@ if __name__ == '__main__':
             y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
             ones = sum(y_predicted)
             accuracy_format = 'Bayes/tfidf: accuracy: {:5.2f} dummy accuracy: {:5.2f} difference: {:5.2f} count: {}'
+            accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
+            dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
+            difference = 100 * (accuracy - dummy_accuracy)
+            logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ones, ))
+    elif which_classifier == 3:
+        # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
+        for random_state_ in random_states:
+            X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                                random_state=random_state_, test_size=test_size_, )
+            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+            counts = tfidf_vectorizer.fit_transform(X_train.values, )
+            classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+            classifier.fit(X=counts, y=y_train.values, )
+            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            ones = sum(y_predicted)
+            accuracy_format = 'log/tfidf: accuracy: {:5.2f} dummy accuracy: {:5.2f} difference: {:5.2f} count: {}'
             accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
             dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
             difference = 100 * (accuracy - dummy_accuracy)
