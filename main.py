@@ -93,7 +93,6 @@ if __name__ == '__main__':
                 y_predicted = classifier.predict(test_data=X_test, )
                 y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
                 accuracy_format = 'method: {} accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
-
                 accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
                 dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
                 difference = 100 * (accuracy - dummy_accuracy)
@@ -102,7 +101,7 @@ if __name__ == '__main__':
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
-            count_vectorizer = CountVectorizer()
+            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
             counts = count_vectorizer.fit_transform(X_train.values, )
             classifier = MultinomialNB()
             classifier.fit(X=counts, y=y_train.values, )
