@@ -100,6 +100,24 @@ if __name__ == '__main__':
                 difference = 100 * (accuracy - dummy_accuracy)
                 logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
     elif which_classifier == 1:
+        logger.info('building spam classifier')
+        methods = ['bow', 'tf-idf']
+        for method in methods:
+            for random_state_ in random_states:
+                X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                                    random_state=random_state_, test_size=test_size_, )
+                train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
+                classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+                classifier.train()
+                y_predicted = classifier.predict(test_data=X_test, )
+                y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+                accuracy_format = 'method: {} accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
+                accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
+                dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
+                difference = 100 * (accuracy - dummy_accuracy)
+                logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
+
+    elif which_classifier == 2:
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -114,7 +132,7 @@ if __name__ == '__main__':
             dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
             difference = 100 * (accuracy - dummy_accuracy)
             logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ones, ))
-    elif which_classifier == 2:
+    elif which_classifier == 3:
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -129,7 +147,7 @@ if __name__ == '__main__':
             dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
             difference = 100 * (accuracy - dummy_accuracy)
             logger.info(accuracy_format.format(accuracy, dummy_accuracy, difference, ones, ))
-    elif which_classifier == 3:
+    elif which_classifier == 4:
         # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
