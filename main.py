@@ -83,8 +83,8 @@ if __name__ == '__main__':
     test_size_ = 0.1
     random_states = list(range(1, run_count + 1))
     if which_classifier == 0:
-        logger.info('building spam classifier')
         method = 'bow'
+        logger.info('building {} spam classifier'.format(method))
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -99,8 +99,8 @@ if __name__ == '__main__':
             difference = 100 * (accuracy - dummy_accuracy)
             logger.info(accuracy_format.format(method, accuracy, dummy_accuracy, difference))
     elif which_classifier == 1:
-        logger.info('building spam classifier')
         method = 'tf-idf'
+        logger.info('building {} spam classifier'.format(method))
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
