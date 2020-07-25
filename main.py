@@ -78,7 +78,7 @@ if __name__ == '__main__':
     for score in top_flat_scores:
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
-    which_classifier = 3
+    which_classifier = 4
     run_count = 40
     test_size_ = 0.1
     random_states = list(range(1, run_count + 1))
