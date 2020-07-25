@@ -15,7 +15,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
 from spam_classifier import SpamClassifier
-
+from numpy import array
 
 def clean(arg, omit):
     tokens = arg.split()
@@ -82,6 +82,7 @@ if __name__ == '__main__':
     run_count = 40
     test_size_ = 0.1
     random_states = list(range(1, run_count + 1))
+    differences = list()
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
@@ -129,5 +130,7 @@ if __name__ == '__main__':
         accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
         dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
         difference = 100 * (accuracy - dummy_accuracy)
+        differences.append(difference)
         logger.info(accuracy_format.format(model_name, accuracy, dummy_accuracy, difference))
+    logger.info('mean difference: {:5.2f}'.format(array(differences).mean()))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
