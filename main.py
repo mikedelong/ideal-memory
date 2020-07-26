@@ -125,14 +125,14 @@ if __name__ == '__main__':
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
         elif which_classifier == 5:
-            model_name = 'logreg/tf-idf'
+            model_name = 'randfor/tf-idf'
             tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
             counts = tfidf_vectorizer.fit_transform(X_train.values, )
             classifier = RandomForestClassifier(n_estimators=30, )
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
         elif which_classifier == 6:
-            model_name = 'logreg/tf-idf'
+            model_name = 'randfor/count'
             count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
             counts = count_vectorizer.fit_transform(X_train.values, )
             classifier = RandomForestClassifier(n_estimators=30, )
