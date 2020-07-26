@@ -128,7 +128,7 @@ if __name__ == '__main__':
             model_name = 'logreg/tf-idf'
             tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
             counts = tfidf_vectorizer.fit_transform(X_train.values, )
-            classifier = RandomForestClassifier()
+            classifier = RandomForestClassifier(n_estimators=30, )
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
         else:
