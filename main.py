@@ -131,6 +131,13 @@ if __name__ == '__main__':
             classifier = RandomForestClassifier(n_estimators=30, )
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+        elif which_classifier == 6:
+            model_name = 'logreg/tf-idf'
+            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+            counts = count_vectorizer.fit_transform(X_train.values, )
+            classifier = RandomForestClassifier(n_estimators=30, )
+            classifier.fit(X=counts, y=y_train.values, )
+            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
         else:
             raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
         ones = sum(y_predicted)
