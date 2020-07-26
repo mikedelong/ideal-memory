@@ -84,7 +84,7 @@ if __name__ == '__main__':
     differences = list()
     random_states = list(range(1, run_count + 1))
     test_size_ = 0.1
-    which_classifier = 5
+    which_classifier = 6
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
