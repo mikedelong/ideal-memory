@@ -15,6 +15,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import AdaBoostClassifier
 
 from spam_classifier import SpamClassifier
 
@@ -84,7 +85,7 @@ if __name__ == '__main__':
     differences = list()
     random_states = list(range(1, run_count + 1))
     test_size_ = 0.1
-    which_classifier = 4
+    which_classifier = 7  # 4 is best so far
     # todo ADA boost?
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
@@ -138,6 +139,13 @@ if __name__ == '__main__':
             count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
             counts = count_vectorizer.fit_transform(X_train.values, )
             classifier = RandomForestClassifier(n_estimators=100, )
+            classifier.fit(X=counts, y=y_train.values, )
+            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+        elif which_classifier == 7:
+            model_name = 'ada/count'
+            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+            counts = count_vectorizer.fit_transform(X_train.values, )
+            classifier = AdaBoostClassifier(n_estimators=100, )
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
         else:
