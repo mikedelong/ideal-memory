@@ -90,7 +90,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in range(11):
+    for which_classifier in range(12):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -162,13 +162,20 @@ if __name__ == '__main__':
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
             elif which_classifier == 9:
+                model_name = 'ada/tf-idf'
+                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+                counts = tfidf_vectorizer.fit_transform(X_train.values, )
+                classifier = AdaBoostClassifier(n_estimators=100, )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            elif which_classifier == 10:
                 model_name = 'tree/count'
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
                 counts = count_vectorizer.fit_transform(X_train.values, )
                 classifier = DecisionTreeClassifier(random_state=random_state_)
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-            elif which_classifier == 10:
+            elif which_classifier == 11:
                 model_name = 'tree/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
