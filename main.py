@@ -16,6 +16,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
 
@@ -81,11 +82,12 @@ if __name__ == '__main__':
     for score in top_flat_scores:
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
+
     run_count = 10
     differences = list()
     random_states = list(range(1, run_count + 1))
     test_size_ = 0.1
-    which_classifier = 5  # need a cook-off to find the best one
+    which_classifier = 9  # todo need a cook-off to find the best one
     for random_state_ in random_states:
         X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                             random_state=random_state_, test_size=test_size_, )
@@ -155,6 +157,13 @@ if __name__ == '__main__':
             classifier = AdaBoostClassifier(n_estimators=100, )
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+        elif which_classifier == 9:
+            model_name = 'tree/tf-idf'
+            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+            counts = tfidf_vectorizer.fit_transform(X_train.values, )
+            classifier = DecisionTreeClassifier(random_state=random_state_)
+            classifier.fit(X=counts, y=y_train.values, )
+            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
         else:
             raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
         ones = sum(y_predicted)
