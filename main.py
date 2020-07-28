@@ -158,6 +158,13 @@ if __name__ == '__main__':
             classifier.fit(X=counts, y=y_train.values, )
             y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
         elif which_classifier == 9:
+            model_name = 'tree/count'
+            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+            counts = count_vectorizer.fit_transform(X_train.values, )
+            classifier = DecisionTreeClassifier(random_state=random_state_)
+            classifier.fit(X=counts, y=y_train.values, )
+            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+        elif which_classifier == 10:
             model_name = 'tree/tf-idf'
             tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
             counts = tfidf_vectorizer.fit_transform(X_train.values, )
