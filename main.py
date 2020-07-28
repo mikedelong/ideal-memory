@@ -87,98 +87,108 @@ if __name__ == '__main__':
     differences = list()
     random_states = list(range(1, run_count + 1))
     test_size_ = 0.1
-    which_classifier = 9  # todo need a cook-off to find the best one
-    for random_state_ in random_states:
-        X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
-                                                            random_state=random_state_, test_size=test_size_, )
-        train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
-        if which_classifier == 0:
-            method = 'bow'
-            model_name = 'spam/bow'
-            classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
-            classifier.train()
-            y_predicted = classifier.predict(test_data=X_test, )
-            y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
-        elif which_classifier == 1:
-            method = 'tf-idf'
-            model_name = 'spam/tf-idf'
-            classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
-            classifier.train()
-            y_predicted = classifier.predict(test_data=X_test, )
-            y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
-        elif which_classifier == 2:
-            model_name = 'Bayes/count'
-            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-            counts = count_vectorizer.fit_transform(X_train.values, )
-            classifier = MultinomialNB()
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-        elif which_classifier == 3:
-            model_name = 'Bayes/tf-idf'
-            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-            counts = tfidf_vectorizer.fit_transform(X_train.values, )
-            classifier = MultinomialNB()
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-        elif which_classifier == 4:
-            # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
-            model_name = 'logreg/count'
-            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-            counts = count_vectorizer.fit_transform(X_train.values, )
-            classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-        elif which_classifier == 5:
-            # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
-            model_name = 'logreg/tf-idf'
-            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-            counts = tfidf_vectorizer.fit_transform(X_train.values, )
-            classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-        elif which_classifier == 6:
-            model_name = 'randfor/count'
-            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-            counts = count_vectorizer.fit_transform(X_train.values, )
-            classifier = RandomForestClassifier(n_estimators=100, )
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-        elif which_classifier == 7:
-            model_name = 'randfor/tf-idf'
-            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-            counts = tfidf_vectorizer.fit_transform(X_train.values, )
-            classifier = RandomForestClassifier(n_estimators=30, )
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-        elif which_classifier == 8:
-            model_name = 'ada/count'
-            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-            counts = count_vectorizer.fit_transform(X_train.values, )
-            classifier = AdaBoostClassifier(n_estimators=100, )
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-        elif which_classifier == 9:
-            model_name = 'tree/count'
-            count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-            counts = count_vectorizer.fit_transform(X_train.values, )
-            classifier = DecisionTreeClassifier(random_state=random_state_)
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-        elif which_classifier == 10:
-            model_name = 'tree/tf-idf'
-            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-            counts = tfidf_vectorizer.fit_transform(X_train.values, )
-            classifier = DecisionTreeClassifier(random_state=random_state_)
-            classifier.fit(X=counts, y=y_train.values, )
-            y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-        else:
-            raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
-        ones = sum(y_predicted)
-        accuracy_format = 'method: {} accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
-        accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
-        dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
-        difference = 100 * (accuracy - dummy_accuracy)
-        differences.append(difference)
-        logger.info(accuracy_format.format(model_name, accuracy, dummy_accuracy, difference))
-    logger.info('mean difference: {:5.2f}'.format(array(differences).mean()))
+    score = -200.0
+    best_classifier = ''
+    model_name = ''
+    for which_classifier in range(11):
+        for random_state_ in random_states:
+            X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
+                                                                random_state=random_state_, test_size=test_size_, )
+            train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
+
+            if which_classifier == 0:
+                method = 'bow'
+                model_name = 'spam/bow'
+                classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+                classifier.train()
+                y_predicted = classifier.predict(test_data=X_test, )
+                y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+            elif which_classifier == 1:
+                method = 'tf-idf'
+                model_name = 'spam/tf-idf'
+                classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+                classifier.train()
+                y_predicted = classifier.predict(test_data=X_test, )
+                y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+            elif which_classifier == 2:
+                model_name = 'Bayes/count'
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = MultinomialNB()
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+            elif which_classifier == 3:
+                model_name = 'Bayes/tf-idf'
+                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+                counts = tfidf_vectorizer.fit_transform(X_train.values, )
+                classifier = MultinomialNB()
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            elif which_classifier == 4:
+                # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
+                model_name = 'logreg/count'
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+            elif which_classifier == 5:
+                # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
+                model_name = 'logreg/tf-idf'
+                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+                counts = tfidf_vectorizer.fit_transform(X_train.values, )
+                classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            elif which_classifier == 6:
+                model_name = 'randfor/count'
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = RandomForestClassifier(n_estimators=100, )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+            elif which_classifier == 7:
+                model_name = 'randfor/tf-idf'
+                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+                counts = tfidf_vectorizer.fit_transform(X_train.values, )
+                classifier = RandomForestClassifier(n_estimators=30, )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            elif which_classifier == 8:
+                model_name = 'ada/count'
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = AdaBoostClassifier(n_estimators=100, )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+            elif which_classifier == 9:
+                model_name = 'tree/count'
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = DecisionTreeClassifier(random_state=random_state_)
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+            elif which_classifier == 10:
+                model_name = 'tree/tf-idf'
+                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+                counts = tfidf_vectorizer.fit_transform(X_train.values, )
+                classifier = DecisionTreeClassifier(random_state=random_state_)
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+            else:
+                raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
+            ones = sum(y_predicted)
+            accuracy_format = 'method: {} accuracy: {:5.2f} dummy classifier accuracy: {:5.2f} difference: {:5.2f}'
+            accuracy = accuracy_score(y_pred=y_predicted, y_true=y_test, )
+            dummy_accuracy = accuracy_score(y_pred=[0 for _ in range(len(y_predicted))], y_true=y_test, )
+            difference = 100 * (accuracy - dummy_accuracy)
+            differences.append(difference)
+            logger.info(accuracy_format.format(model_name, accuracy, dummy_accuracy, difference))
+        mean_difference = array(differences).mean()
+        logger.info('mean difference: {:5.2f}'.format(mean_difference))
+        if mean_difference > score:
+            score = mean_difference
+            best_classifier = model_name
+
+    logger.info('best classifier: {} score: {}'.format(best_classifier, score, ))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
