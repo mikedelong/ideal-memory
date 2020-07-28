@@ -82,7 +82,7 @@ if __name__ == '__main__':
     for score in top_flat_scores:
         logger.info('{} {:5.4f}'.format(score[0], score[1]))
 
-
+    # todo: add code to produce a submittable guess
     run_count = 10
     differences = list()
     random_states = list(range(1, run_count + 1))
