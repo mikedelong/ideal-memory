@@ -47,8 +47,7 @@ def spam_bow(train, test):
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
-    name = 'spam/bow'
-    return name, result
+    return 'spam/bow', result
 
 
 def spam_tf_idf(train, test):
