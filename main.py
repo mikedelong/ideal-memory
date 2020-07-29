@@ -41,6 +41,17 @@ def collect(arg):
     return Counter(tokens)
 
 
+def spam_bow(train, test):
+    global method, model_name, y_predicted
+    method = 'bow'
+    name = 'spam/bow'
+    local_classifier = SpamClassifier(method=method, grams=1, train_data=train, )
+    local_classifier.train()
+    result = local_classifier.predict(test_data=test, )
+    result = [result[key] for key in sorted(result.keys())]
+    return name, result
+
+
 if __name__ == '__main__':
     time_start = time()
     logger = getLogger(__name__)
@@ -97,12 +108,7 @@ if __name__ == '__main__':
             train_data_ = pd.DataFrame(data={'message': X_train, 'label': y_train, }, ).reset_index()
 
             if which_classifier == 0:
-                method = 'bow'
-                model_name = 'spam/bow'
-                classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
-                classifier.train()
-                y_predicted = classifier.predict(test_data=X_test, )
-                y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+                model_name, y_predicted = spam_bow(train_data_, X_test, )
             elif which_classifier == 1:
                 method = 'tf-idf'
                 model_name = 'spam/tf-idf'
