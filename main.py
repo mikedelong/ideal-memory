@@ -41,12 +41,12 @@ def collect(arg):
     return Counter(tokens)
 
 
-def bayes_count():
+def bayes_count(x_train, y, test):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = count_vectorizer.fit_transform(X_train.values, )
+    transformed = count_vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
-    local_classifier.fit(X=transformed, y=y_train.values, )
-    result = local_classifier.predict(X=vectorizer.transform(X_test), )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
     return 'Bayes/count', result
 
 
@@ -61,9 +61,9 @@ def spam_bow(train, test):
 
 def spam_tf_idf(train, test):
     method = 'tf-idf'
-    local_classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+    local_classifier = SpamClassifier(method=method, grams=1, train_data=train, )
     local_classifier.train()
-    result = local_classifier.predict(test_data=X_test, )
+    result = local_classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
     return 'spam/tf-idf', result
 
@@ -128,7 +128,7 @@ if __name__ == '__main__':
             elif which_classifier == 1:
                 model_name, y_predicted = spam_tf_idf(train_data_, X_test, )
             elif which_classifier == 2:
-                model_name, y_predicted = bayes_count(train_data_, X_test, )
+                model_name, y_predicted = bayes_count(X_train, y_train, X_test, )
             elif which_classifier == 3:
                 model_name = 'Bayes/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
