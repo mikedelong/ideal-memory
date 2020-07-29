@@ -51,8 +51,7 @@ def bayes_count(x_train, y, test):
 
 
 def spam_bow(train, test):
-    method = 'bow'
-    local_classifier = SpamClassifier(method=method, grams=1, train_data=train, )
+    local_classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
@@ -60,8 +59,7 @@ def spam_bow(train, test):
 
 
 def spam_tf_idf(train, test):
-    method = 'tf-idf'
-    local_classifier = SpamClassifier(method=method, grams=1, train_data=train, )
+    local_classifier = SpamClassifier(method='tf-idf', grams=1, train_data=train, )
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
