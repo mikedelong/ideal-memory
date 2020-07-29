@@ -42,12 +42,21 @@ def collect(arg):
 
 
 def spam_bow(train, test):
-    global method, model_name, y_predicted
     method = 'bow'
-    name = 'spam/bow'
     local_classifier = SpamClassifier(method=method, grams=1, train_data=train, )
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
+    result = [result[key] for key in sorted(result.keys())]
+    name = 'spam/bow'
+    return name, result
+
+
+def spam_tf_idf(train, test):
+    method = 'tf-idf'
+    local_classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
+    local_classifier.train()
+    result = local_classifier.predict(test_data=X_test, )
+    name = 'spam/tf-idf'
     result = [result[key] for key in sorted(result.keys())]
     return name, result
 
@@ -110,12 +119,7 @@ if __name__ == '__main__':
             if which_classifier == 0:
                 model_name, y_predicted = spam_bow(train_data_, X_test, )
             elif which_classifier == 1:
-                method = 'tf-idf'
-                model_name = 'spam/tf-idf'
-                classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
-                classifier.train()
-                y_predicted = classifier.predict(test_data=X_test, )
-                y_predicted = [y_predicted[key] for key in sorted(y_predicted.keys())]
+                model_name, y_predicted = spam_tf_idf(train_data_, X_test, )
             elif which_classifier == 2:
                 model_name = 'Bayes/count'
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
