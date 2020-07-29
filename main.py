@@ -55,9 +55,8 @@ def spam_tf_idf(train, test):
     local_classifier = SpamClassifier(method=method, grams=1, train_data=train_data_, )
     local_classifier.train()
     result = local_classifier.predict(test_data=X_test, )
-    name = 'spam/tf-idf'
     result = [result[key] for key in sorted(result.keys())]
-    return name, result
+    return 'spam/tf-idf', result
 
 
 if __name__ == '__main__':
