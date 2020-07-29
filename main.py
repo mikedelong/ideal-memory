@@ -43,7 +43,7 @@ def collect(arg):
 
 def bayes_count(x_train, y, test):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = count_vectorizer.fit_transform(x_train.values, )
+    transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
     local_classifier.fit(X=transformed, y=y.values, )
     result = local_classifier.predict(X=vectorizer.transform(test), )
