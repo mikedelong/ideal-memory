@@ -56,7 +56,7 @@ def bayes_tf_idf(x_train, y, test):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
     local_classifier.fit(X=transformed, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test), )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
     return 'Bayes/tf-idf', result
 
 
