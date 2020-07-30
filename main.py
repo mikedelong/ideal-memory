@@ -53,7 +53,7 @@ def bayes_count(x_train, y, test):
 
 def bayes_tf_idf(x_train, y, test):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = tfidf_vectorizer.fit_transform(x_train.values, )
+    transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
     local_classifier.fit(X=transformed, y=y.values, )
     result = classifier.predict(X=vectorizer.transform(test), )
