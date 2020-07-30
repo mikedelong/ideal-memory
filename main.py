@@ -50,6 +50,15 @@ def bayes_count(x_train, y, test):
     return 'Bayes/count', result
 
 
+def bayes_tf_idf(x_train, y, test):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    transformed = tfidf_vectorizer.fit_transform(x_train.values, )
+    local_classifier = MultinomialNB()
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
+    return 'Bayes/tf-idf', result
+
+
 def spam_bow(train, test):
     local_classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     local_classifier.train()
@@ -128,12 +137,7 @@ if __name__ == '__main__':
             elif which_classifier == 2:
                 model_name, y_predicted = bayes_count(X_train, y_train, X_test, )
             elif which_classifier == 3:
-                model_name = 'Bayes/tf-idf'
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-                counts = tfidf_vectorizer.fit_transform(X_train.values, )
-                classifier = MultinomialNB()
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+                model_name, y_predicted = bayes_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 4:
                 # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
                 model_name = 'logreg/count'
