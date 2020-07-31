@@ -30,6 +30,15 @@ def adaboost_count(x_train, y, test, ):
     return 'ada/count', result
 
 
+def adaboost_tf_idf(x_train, y, test, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = AdaBoostClassifier(n_estimators=100, )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
+    return 'ada/tf-idf', result
+
+
 def bayes_count(x_train, y, test, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
@@ -193,12 +202,7 @@ if __name__ == '__main__':
             elif which_classifier == 8:
                 model_name, y_predicted = adaboost_count(X_train, y_train, X_test, )
             elif which_classifier == 9:
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-                counts = tfidf_vectorizer.fit_transform(X_train.values, )
-                classifier = AdaBoostClassifier(n_estimators=100, )
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-                model_name = 'ada/tf-idf'
+                model_name, y_predicted = adaboost_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 10:
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
                 counts = count_vectorizer.fit_transform(X_train.values, )
