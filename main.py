@@ -80,8 +80,17 @@ def decision_tree_count(x_train, y, test, random_state, ):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = DecisionTreeClassifier(random_state=random_state)
     local_classifier.fit(X=transformed, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test), )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
     return 'tree/count', result
+
+
+def decision_tree_tf_idf(x_train, y, test, random_state, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = DecisionTreeClassifier(random_state=random_state)
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
+    return 'tree/tf-idf', result
 
 
 def logreg_count(x_train, y, test, ):
@@ -115,8 +124,8 @@ def random_forest_count(x_train, y, test, random_state, ):
 def random_forest_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = RandomForestClassifier(n_estimators=30, random_state=random_state, )
-    local_classifier.fit(X=transformed, y=y.values, )
+    classifier = RandomForestClassifier(n_estimators=30, random_state=random_state, )
+    classifier.fit(X=transformed, y=y.values, )
     result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'randfor/tf-idf', result
 
@@ -209,18 +218,13 @@ if __name__ == '__main__':
             elif which_classifier == 7:
                 model_name, y_predicted = random_forest_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 8:
-                model_name, y_predicted = adaboost_count(X_train, y_train, X_test, )
+                model_name, y_predicted = adaboost_count(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 9:
-                model_name, y_predicted = adaboost_tf_idf(X_train, y_train, X_test, )
+                model_name, y_predicted = adaboost_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 10:
                 model_name, y_predicted = decision_tree_count(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 11:
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-                counts = tfidf_vectorizer.fit_transform(X_train.values, )
-                classifier = DecisionTreeClassifier(random_state=random_state_)
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-                model_name = 'tree/tf-idf'
+                model_name, y_predicted = decision_tree_tf_idf(X_train, y_train, X_test, random_state_, )
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
             ones = sum(y_predicted)
