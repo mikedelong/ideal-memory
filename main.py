@@ -149,7 +149,6 @@ if __name__ == '__main__':
             elif which_classifier == 4:
                 model_name, y_predicted = logreg_count(X_train, y_train, X_test, )
             elif which_classifier == 5:
-                # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
                 model_name = 'logreg/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
