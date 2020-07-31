@@ -57,13 +57,13 @@ def bayes_tf_idf(x_train, y, test):
     return 'Bayes/tf-idf', result
 
 
-def logreg_count():
+def logreg_count(x_train, y, test):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(X_train.values, )
+    transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-    local_classifier.fit(X=transformed, y=y_train.values, )
-    result = local_classifier.predict(X=vectorizer.transform(X_test), )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
     return 'logreg/count', result
 
 
