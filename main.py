@@ -75,6 +75,15 @@ def collect(arg, ):
     return Counter(tokens)
 
 
+def decision_tree_count(x_train, y, test, ):
+    vectorizer = CountVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = DecisionTreeClassifier(random_state=random_state_)
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
+    return 'tree/count', result
+
+
 def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
@@ -204,12 +213,7 @@ if __name__ == '__main__':
             elif which_classifier == 9:
                 model_name, y_predicted = adaboost_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 10:
-                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-                counts = count_vectorizer.fit_transform(X_train.values, )
-                classifier = DecisionTreeClassifier(random_state=random_state_)
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
-                model_name = 'tree/count'
+                model_name, y_predicted = decision_tree_count(X_train, y_train, X_test, )
             elif which_classifier == 11:
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
