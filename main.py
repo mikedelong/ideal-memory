@@ -23,35 +23,35 @@ from spam_classifier import SpamClassifier
 
 def adaboost_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = AdaBoostClassifier(n_estimators=100, random_state=random_state, )
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = AdaBoostClassifier(n_estimators=100, random_state=random_state, )
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
     return 'ada/count', result
 
 
 def adaboost_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = AdaBoostClassifier(n_estimators=100, random_state=random_state, )
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = AdaBoostClassifier(n_estimators=100, random_state=random_state, )
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
     return 'ada/tf-idf', result
 
 
 def bayes_count(x_train, y, test, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    result = MultinomialNB().fit(X=transformed, y=y.values, ).predict(X=vectorizer.transform(test, ), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    result = MultinomialNB().fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test, ), )
     return 'Bayes/count', result
 
 
 def bayes_tf_idf(x_train, y, test, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = MultinomialNB()
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test, ), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = MultinomialNB()
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'Bayes/tf-idf', result
 
 
@@ -77,71 +77,71 @@ def collect(arg, ):
 
 def decision_tree_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = DecisionTreeClassifier(random_state=random_state)
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = DecisionTreeClassifier(random_state=random_state)
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
     return 'tree/count', result
 
 
 def decision_tree_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = DecisionTreeClassifier(random_state=random_state)
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = DecisionTreeClassifier(random_state=random_state)
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test), )
     return 'tree/tf-idf', result
 
 
 def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test, ), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'logreg/count', result
 
 
 def logreg_tf_idf(x_train, y, test, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test, ), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'logreg/tf-idf', result
 
 
 def random_forest_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
-    local_classifier = RandomForestClassifier(n_estimators=100, random_state=random_state, )
-    local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test, ), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    classifier = RandomForestClassifier(n_estimators=100, random_state=random_state, )
+    classifier.fit(X=counts, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'randfor/count', result
 
 
 def random_forest_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-    transformed = vectorizer.fit_transform(x_train.values, )
+    counts = vectorizer.fit_transform(x_train.values, )
     classifier = RandomForestClassifier(n_estimators=30, random_state=random_state, )
-    classifier.fit(X=transformed, y=y.values, )
+    classifier.fit(X=counts, y=y.values, )
     result = classifier.predict(X=vectorizer.transform(test, ), )
     return 'randfor/tf-idf', result
 
 
 def spam_bow(train, test, ):
-    local_classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
-    local_classifier.train()
-    result = local_classifier.predict(test_data=test, )
+    classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
+    classifier.train()
+    result = classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
     return 'spam/bow', result
 
 
 def spam_tf_idf(train, test, ):
-    local_classifier = SpamClassifier(method='tf-idf', grams=1, train_data=train, )
-    local_classifier.train()
-    result = local_classifier.predict(test_data=test, )
+    classifier = SpamClassifier(method='tf-idf', grams=1, train_data=train, )
+    classifier.train()
+    result = classifier.predict(test_data=test, )
     result = [result[key] for key in sorted(result.keys())]
     return 'spam/tf-idf', result
 
