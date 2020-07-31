@@ -44,7 +44,7 @@ def collect(arg, ):
 def bayes_count(x_train, y, test, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
-    result = MultinomialNB().fit(X=transformed, y=y.values, ).predict(X=vectorizer.transform(test), )
+    result = MultinomialNB().fit(X=transformed, y=y.values, ).predict(X=vectorizer.transform(test, ), )
     return 'Bayes/count', result
 
 
@@ -53,7 +53,7 @@ def bayes_tf_idf(x_train, y, test, ):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
     local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    result = local_classifier.predict(X=vectorizer.transform(test, ), )
     return 'Bayes/tf-idf', result
 
 
@@ -63,7 +63,7 @@ def logreg_count(x_train, y, test, ):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
     local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    result = local_classifier.predict(X=vectorizer.transform(test, ), )
     return 'logreg/count', result
 
 
@@ -72,7 +72,7 @@ def logreg_tf_idf(x_train, y, test, ):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
     local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=vectorizer.transform(test), )
+    result = local_classifier.predict(X=vectorizer.transform(test, ), )
     return 'logreg/tf-idf', result
 
 
@@ -81,8 +81,17 @@ def random_forest_count(x_train, y, test, ):
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = RandomForestClassifier(n_estimators=100, )
     local_classifier.fit(X=transformed, y=y.values, )
-    result = local_classifier.predict(X=count_vectorizer.transform(test), )
+    result = local_classifier.predict(X=count_vectorizer.transform(test, ), )
     return 'randfor/count', result
+
+
+def random_forest_tf_idf(x_train, y, test, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = RandomForestClassifier(n_estimators=30, )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = classifier.predict(X=vectorizer.transform(test, ), )
+    return 'randfor/tf-idf', result
 
 
 def spam_bow(train, test, ):
@@ -171,12 +180,7 @@ if __name__ == '__main__':
             elif which_classifier == 6:
                 model_name, y_predicted = random_forest_count(X_train, y_train, X_test, )
             elif which_classifier == 7:
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-                counts = tfidf_vectorizer.fit_transform(X_train.values, )
-                classifier = RandomForestClassifier(n_estimators=30, )
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
-                model_name = 'randfor/tf-idf'
+                model_name, y_predicted = random_forest_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 8:
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
                 counts = count_vectorizer.fit_transform(X_train.values, )
