@@ -21,7 +21,7 @@ from sklearn.tree import DecisionTreeClassifier
 from spam_classifier import SpamClassifier
 
 
-def clean(arg, omit):
+def clean(arg, omit, ):
     tokens = arg.split()
     tokens = [token.lower() for token in tokens]
     tokens = [token for token in tokens if token not in {'\t', '\n'} and token not in omit]
@@ -36,19 +36,19 @@ def clean(arg, omit):
     return result
 
 
-def collect(arg):
+def collect(arg, ):
     tokens = [token for value in arg.values for token in str(value).split()]
     return Counter(tokens)
 
 
-def bayes_count(x_train, y, test):
+def bayes_count(x_train, y, test, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
     result = MultinomialNB().fit(X=transformed, y=y.values, ).predict(X=vectorizer.transform(test), )
     return 'Bayes/count', result
 
 
-def bayes_tf_idf(x_train, y, test):
+def bayes_tf_idf(x_train, y, test, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
     local_classifier = MultinomialNB()
@@ -57,7 +57,7 @@ def bayes_tf_idf(x_train, y, test):
     return 'Bayes/tf-idf', result
 
 
-def logreg_count(x_train, y, test):
+def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     transformed = vectorizer.fit_transform(x_train.values, )
@@ -67,7 +67,16 @@ def logreg_count(x_train, y, test):
     return 'logreg/count', result
 
 
-def spam_bow(train, test):
+def logreg_tf_idf(x_train, y, test, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = LogisticRegression(penalty='l1', solver='liblinear', )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=vectorizer.transform(test), )
+    return 'logreg/tf-idf', result
+
+
+def spam_bow(train, test, ):
     local_classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
@@ -75,7 +84,7 @@ def spam_bow(train, test):
     return 'spam/bow', result
 
 
-def spam_tf_idf(train, test):
+def spam_tf_idf(train, test, ):
     local_classifier = SpamClassifier(method='tf-idf', grams=1, train_data=train, )
     local_classifier.train()
     result = local_classifier.predict(test_data=test, )
@@ -149,12 +158,7 @@ if __name__ == '__main__':
             elif which_classifier == 4:
                 model_name, y_predicted = logreg_count(X_train, y_train, X_test, )
             elif which_classifier == 5:
-                model_name = 'logreg/tf-idf'
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
-                counts = tfidf_vectorizer.fit_transform(X_train.values, )
-                classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+                model_name, y_predicted = logreg_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 6:
                 model_name = 'randfor/count'
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
