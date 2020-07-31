@@ -76,6 +76,15 @@ def logreg_tf_idf(x_train, y, test, ):
     return 'logreg/tf-idf', result
 
 
+def random_forest_count(x_train, y, test, ):
+    vectorizer = CountVectorizer(ngram_range=(1, 3), )
+    transformed = vectorizer.fit_transform(x_train.values, )
+    local_classifier = RandomForestClassifier(n_estimators=100, )
+    local_classifier.fit(X=transformed, y=y.values, )
+    result = local_classifier.predict(X=count_vectorizer.transform(test), )
+    return 'randfor/count', result
+
+
 def spam_bow(train, test, ):
     local_classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     local_classifier.train()
@@ -160,47 +169,42 @@ if __name__ == '__main__':
             elif which_classifier == 5:
                 model_name, y_predicted = logreg_tf_idf(X_train, y_train, X_test, )
             elif which_classifier == 6:
-                model_name = 'randfor/count'
-                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-                counts = count_vectorizer.fit_transform(X_train.values, )
-                classifier = RandomForestClassifier(n_estimators=100, )
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+                model_name, y_predicted = random_forest_count(X_train, y_train, X_test, )
             elif which_classifier == 7:
-                model_name = 'randfor/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
                 classifier = RandomForestClassifier(n_estimators=30, )
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+                model_name = 'randfor/tf-idf'
             elif which_classifier == 8:
+                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
+                counts = count_vectorizer.fit_transform(X_train.values, )
+                classifier = AdaBoostClassifier(n_estimators=100, )
+                classifier.fit(X=counts, y=y_train.values, )
+                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
                 model_name = 'ada/count'
-                count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
-                counts = count_vectorizer.fit_transform(X_train.values, )
-                classifier = AdaBoostClassifier(n_estimators=100, )
-                classifier.fit(X=counts, y=y_train.values, )
-                y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
             elif which_classifier == 9:
-                model_name = 'ada/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
                 classifier = AdaBoostClassifier(n_estimators=100, )
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+                model_name = 'ada/tf-idf'
             elif which_classifier == 10:
-                model_name = 'tree/count'
                 count_vectorizer = CountVectorizer(ngram_range=(1, 3), )
                 counts = count_vectorizer.fit_transform(X_train.values, )
                 classifier = DecisionTreeClassifier(random_state=random_state_)
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=count_vectorizer.transform(X_test), )
+                model_name = 'tree/count'
             elif which_classifier == 11:
-                model_name = 'tree/tf-idf'
                 tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
                 counts = tfidf_vectorizer.fit_transform(X_train.values, )
                 classifier = DecisionTreeClassifier(random_state=random_state_)
                 classifier.fit(X=counts, y=y_train.values, )
                 y_predicted = classifier.predict(X=tfidf_vectorizer.transform(X_test), )
+                model_name = 'tree/tf-idf'
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
             ones = sum(y_predicted)
