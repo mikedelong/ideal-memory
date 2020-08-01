@@ -44,10 +44,7 @@ def bayes_count(x_train, y, test, ):
 def bayes_tf_idf(x_train, y, test, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    classifier = MultinomialNB()
-    classifier.fit(X=counts, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test, ), )
-    return 'Bayes/tf-idf', result
+    return 'Bayes/tf-idf', MultinomialNB().fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test, ), )
 
 
 def clean(arg, omit, ):
