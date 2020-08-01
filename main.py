@@ -24,9 +24,8 @@ from spam_classifier import SpamClassifier
 def adaboost_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    result = AdaBoostClassifier(n_estimators=100, random_state=random_state, ).fit(X=counts, y=y.values, ).predict(
-        X=vectorizer.transform(test), )
-    return 'ada/count', result
+    return 'ada/count', AdaBoostClassifier(n_estimators=100, random_state=random_state,
+                                           ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test), )
 
 
 def adaboost_tf_idf(x_train, y, test, random_state, ):
