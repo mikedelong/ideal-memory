@@ -31,9 +31,8 @@ def adaboost_count(x_train, y, test, random_state, ):
 def adaboost_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    classifier = AdaBoostClassifier(n_estimators=100, random_state=random_state, )
-    classifier.fit(X=counts, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test), )
+    result = AdaBoostClassifier(n_estimators=100, random_state=random_state, ).fit(X=counts, y=y.values, ).predict(
+        X=vectorizer.transform(test), )
     return 'ada/tf-idf', result
 
 
