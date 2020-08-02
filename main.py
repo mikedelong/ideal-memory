@@ -99,10 +99,9 @@ def logreg_tf_idf(x_train, y, test, ):
 def random_forest_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    classifier = RandomForestClassifier(n_estimators=100, random_state=random_state, )
-    classifier.fit(X=counts, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test, ), )
-    return 'randfor/count', result
+    return 'randfor/count', RandomForestClassifier(n_estimators=100, random_state=random_state,
+                                                   ).fit(X=counts, y=y.values,
+                                                         ).predict(X=vectorizer.transform(test, ), )
 
 
 def random_forest_tf_idf(x_train, y, test, random_state, ):
