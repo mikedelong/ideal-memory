@@ -92,10 +92,8 @@ def logreg_count(x_train, y, test, ):
 def logreg_tf_idf(x_train, y, test, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-    classifier.fit(X=counts, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test, ), )
-    return 'logreg/tf-idf', result
+    return 'logreg/tf-idf', LogisticRegression(penalty='l1', solver='liblinear', ).fit(X=counts, y=y.values, ).predict(
+        X=vectorizer.transform(test, ), )
 
 
 def random_forest_count(x_train, y, test, random_state, ):
