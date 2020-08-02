@@ -85,10 +85,8 @@ def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    classifier = LogisticRegression(penalty='l1', solver='liblinear', )
-    classifier.fit(X=counts, y=y.values, )
-    result = classifier.predict(X=vectorizer.transform(test, ), )
-    return 'logreg/count', result
+    return 'logreg/count', LogisticRegression(penalty='l1', solver='liblinear', ).fit(X=counts, y=y.values, ).predict(
+        X=vectorizer.transform(test, ), )
 
 
 def logreg_tf_idf(x_train, y, test, ):
