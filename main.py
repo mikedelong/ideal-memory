@@ -123,8 +123,7 @@ def spam_tf_idf(train, test, ):
     classifier = SpamClassifier(method='tf-idf', grams=1, train_data=train, )
     classifier.train()
     result = classifier.predict(test_data=test, )
-    result = [result[key] for key in sorted(result.keys())]
-    return 'spam/tf-idf', result
+    return 'spam/tf-idf', [result[key] for key in sorted(result.keys())]
 
 
 if __name__ == '__main__':
