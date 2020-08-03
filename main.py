@@ -58,8 +58,7 @@ def clean(arg, omit, ):
               else token for token in tokens]
     tokens = [token[:-1] if any([str(token).endswith(symbol) for symbol in punctuation])
               else token for token in tokens]
-    result = ' '.join(tokens)
-    return result
+    return ' '.join(tokens)
 
 
 def collect(arg, ):
