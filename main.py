@@ -62,8 +62,7 @@ def clean(arg, omit, ):
 
 
 def collect(arg, ):
-    tokens = [token for value in arg.values for token in str(value).split()]
-    return Counter(tokens)
+    return Counter([token for value in arg.values for token in str(value).split()])
 
 
 def decision_tree_count(x_train, y, test, random_state, ):
