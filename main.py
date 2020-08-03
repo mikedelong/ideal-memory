@@ -116,8 +116,7 @@ def spam_bow(train, test, ):
     classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     classifier.train()
     result = classifier.predict(test_data=test, )
-    result = [result[key] for key in sorted(result.keys())]
-    return 'spam/bow', result
+    return 'spam/bow', [result[key] for key in sorted(result.keys())]
 
 
 def spam_tf_idf(train, test, ):
