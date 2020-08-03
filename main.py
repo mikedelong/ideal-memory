@@ -148,7 +148,6 @@ if __name__ == '__main__':
     logger.info('cleaning training data', )
     train_df['clean'] = train_df['Clause Text'].apply(clean, args=(stopwords,))
     positive_df = train_df[train_df['Classification'] == 1]
-    negative_df = train_df[train_df['Classification'] == 0]
 
     count = dict(collect(train_df.clean))
     positive_count = dict(collect(positive_df.clean))
