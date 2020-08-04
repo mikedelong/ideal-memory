@@ -90,6 +90,15 @@ def k_neighbors_count(x_train, y, test, neighbors, ):
                                                                         ).predict(X=vectorizer.transform(test, ))
 
 
+def k_neighbors_tf_idf(x_train, y, test, neighbors, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'k-neighbors/tf-idf', KNeighborsClassifier(n_neighbors=neighbors, weights='uniform', algorithm='auto',
+                                                      leaf_size=30, p=2, metric='minkowski', metric_params=None,
+                                                      n_jobs=None, ).fit(X=counts, y=y.values,
+                                                                         ).predict(X=vectorizer.transform(test, ))
+
+
 def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
@@ -183,7 +192,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in [12]:  # in range(13):
+    for which_classifier in [13]:  # in range(13):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -216,6 +225,9 @@ if __name__ == '__main__':
             elif which_classifier == 12:
                 neighbors_ = 9
                 model_name, y_predicted = k_neighbors_count(X_train, y_train, X_test, neighbors_)
+            elif which_classifier == 13:
+                neighbors_ = 5
+                model_name, y_predicted = k_neighbors_tf_idf(X_train, y_train, X_test, neighbors_)
 
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
