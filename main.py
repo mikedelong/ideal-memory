@@ -214,7 +214,7 @@ if __name__ == '__main__':
             elif which_classifier == 11:
                 model_name, y_predicted = decision_tree_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 12:
-                neighbors_ = 5
+                neighbors_ = 9
                 model_name, y_predicted = k_neighbors_count(X_train, y_train, X_test, neighbors_)
 
             else:
