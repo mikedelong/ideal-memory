@@ -16,11 +16,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
-
-from sklearn.neighbors import KNeighborsClassifier
 
 
 def adaboost_count(x_train, y, test, random_state, ):
