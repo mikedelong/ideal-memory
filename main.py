@@ -29,10 +29,14 @@ def adaboost_count(x_train, y, test, random_state, ):
                                            ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test), )
 
 
+# todo: score to beat: 0.924
 def adaboost_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    return 'ada/tf-idf', AdaBoostClassifier(n_estimators=100, random_state=random_state,
+    algorithm = 'SAMME.R'  # was 'SAMME.R'
+    learning_rate = 1.0
+    return 'ada/tf-idf', AdaBoostClassifier(algorithm=algorithm, learning_rate=learning_rate, base_estimator=None,
+                                            n_estimators=100, random_state=random_state,
                                             ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test), )
 
 
