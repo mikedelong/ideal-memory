@@ -20,6 +20,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
+from sklearn.svm import SVC
 
 
 def adaboost_count(x_train, y, test, random_state, ):
@@ -134,6 +135,15 @@ def random_forest_tf_idf(x_train, y, test, random_state, ):
                                                           ).predict(X=vectorizer.transform(test, ), )
 
 
+def svc_count(x_train, y, test, random_state, ):
+    vectorizer = CountVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'svc/count', SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, decision_function_shape='ovr',
+                            degree=3, gamma='scale', kernel='rbf', max_iter=-1, probability=False,
+                            random_state=random_state, shrinking=True, tol=0.001, verbose=False,
+                            ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test, ), )
+
+
 def spam_bow(train, test, ):
     classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     classifier.train()
@@ -196,7 +206,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in range(14):
+    for which_classifier in range(15):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -228,10 +238,12 @@ if __name__ == '__main__':
                 model_name, y_predicted = decision_tree_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 12:
                 neighbors_ = 9
-                model_name, y_predicted = k_neighbors_count(X_train, y_train, X_test, neighbors_)
+                model_name, y_predicted = k_neighbors_count(X_train, y_train, X_test, neighbors_, )
             elif which_classifier == 13:
                 neighbors_ = 5
-                model_name, y_predicted = k_neighbors_tf_idf(X_train, y_train, X_test, neighbors_)
+                model_name, y_predicted = k_neighbors_tf_idf(X_train, y_train, X_test, neighbors_, )
+            elif which_classifier == 14:
+                model_name, y_predicted = svc_count(X_train, y_train, X_test, random_state_, )
 
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
