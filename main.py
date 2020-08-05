@@ -34,8 +34,8 @@ def adaboost_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
     algorithm = 'SAMME.R'  # was 'SAMME.R'
-    learning_rate = 1.0
-    return 'ada/tf-idf', AdaBoostClassifier(algorithm=algorithm, learning_rate=learning_rate, base_estimator=None,
+    learning_rate = 2.0 # was 1.0
+    return 'ada/tf-idf', AdaBoostClassifier(algorithm=algorithm, base_estimator=None, learning_rate=learning_rate,
                                             n_estimators=100, random_state=random_state,
                                             ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test), )
 
