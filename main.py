@@ -144,6 +144,15 @@ def svc_count(x_train, y, test, random_state, ):
                             ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test, ), )
 
 
+def svc_tf_idf(x_train, y, test, random_state, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'svc/tf-idf', SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, decision_function_shape='ovr',
+                             degree=3, gamma='scale', kernel='rbf', max_iter=-1, probability=False,
+                             random_state=random_state, shrinking=True, tol=0.001, verbose=False,
+                             ).fit(X=counts, y=y.values, ).predict(X=vectorizer.transform(test, ), )
+
+
 def spam_bow(train, test, ):
     classifier = SpamClassifier(method='bow', grams=1, train_data=train, )
     classifier.train()
@@ -244,6 +253,8 @@ if __name__ == '__main__':
                 model_name, y_predicted = k_neighbors_tf_idf(X_train, y_train, X_test, neighbors_, )
             elif which_classifier == 14:
                 model_name, y_predicted = svc_count(X_train, y_train, X_test, random_state_, )
+            elif which_classifier == 15:
+                model_name, y_predicted = svc_tf_idf(X_train, y_train, X_test, random_state_, )
 
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
