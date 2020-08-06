@@ -282,6 +282,6 @@ if __name__ == '__main__':
         if mean_difference > score:
             score = mean_difference
             best_classifier = model_name
+            logger.info('best classifier so far: {} score: {:5.3f}'.format(best_classifier, score, ))
 
-    logger.info('best classifier: {} score: {:5.3f}'.format(best_classifier, score, ))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
