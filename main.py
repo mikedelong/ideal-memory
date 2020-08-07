@@ -109,7 +109,7 @@ def linear_svc_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
     return 'linear SVC/count', LinearSVC(C=1.0, class_weight=None, fit_intercept=True, dual=True, intercept_scaling=1,
-                                         loss='squared_hinge', max_iter=1000, penalty='l2', random_state=random_state,
+                                         loss='squared_hinge', max_iter=10000, penalty='l2', random_state=random_state,
                                          tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
         X=vectorizer.transform(test, ))
 
@@ -284,4 +284,5 @@ if __name__ == '__main__':
             best_classifier = model_name
             logger.info('best classifier so far: {} score: {:5.3f}'.format(best_classifier, score, ))
 
+    logger.info('best classifier: {} score: {:5.3f}'.format(best_classifier, score, ))
     logger.info('total time: {:5.2f}s'.format(time() - time_start))
