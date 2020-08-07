@@ -114,6 +114,15 @@ def linear_svc_count(x_train, y, test, random_state, ):
         X=vectorizer.transform(test, ))
 
 
+def linear_svc_tf_idf(x_train, y, test, random_state, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'linear SVC/count', LinearSVC(C=1.0, class_weight=None, fit_intercept=True, dual=True, intercept_scaling=1,
+                                         loss='squared_hinge', max_iter=10000, penalty='l2', random_state=random_state,
+                                         tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
+        X=vectorizer.transform(test, ))
+
+
 def logreg_count(x_train, y, test, ):
     # https://towardsdatascience.com/spam-detection-with-logistic-regression-23e3709e522
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
@@ -225,7 +234,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in range(17):
+    for which_classifier in range(18):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -267,6 +276,8 @@ if __name__ == '__main__':
                 model_name, y_predicted = svc_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 16:
                 model_name, y_predicted = linear_svc_count(X_train, y_train, X_test, random_state_, )
+            elif which_classifier == 17:
+                model_name, y_predicted = linear_svc_tf_idf(X_train, y_train, X_test, random_state_, )
 
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
