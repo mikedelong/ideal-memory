@@ -109,7 +109,7 @@ def linear_svc_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
     return 'linear SVC/count', LinearSVC(C=1.0, class_weight=None, fit_intercept=True, dual=True, intercept_scaling=1,
-                                         loss='squared_hinge', max_iter=20000, penalty='l2', random_state=random_state,
+                                         loss='squared_hinge', max_iter=40000, penalty='l2', random_state=random_state,
                                          tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
         X=vectorizer.transform(test, ))
 
@@ -118,8 +118,8 @@ def linear_svc_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
     return 'linear SVC/tf-idf', LinearSVC(C=1.0, class_weight=None, fit_intercept=True, dual=True, intercept_scaling=1,
-                                         loss='squared_hinge', max_iter=20000, penalty='l2', random_state=random_state,
-                                         tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
+                                          loss='squared_hinge', max_iter=20000, penalty='l2', random_state=random_state,
+                                          tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
         X=vectorizer.transform(test, ))
 
 
@@ -227,14 +227,14 @@ if __name__ == '__main__':
         logger.info('{} {:5.4f}'.format(score[0], score[1], ), )
 
     # todo: add code to produce a submittable guess
-    run_count = 10
+    run_count = 5
     differences = list()
     random_states = list(range(1, run_count + 1))
     test_size_ = 0.1
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in range(18):
+    for which_classifier in range(16, 18):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
