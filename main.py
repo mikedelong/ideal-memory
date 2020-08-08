@@ -117,7 +117,7 @@ def linear_svc_count(x_train, y, test, random_state, ):
 def linear_svc_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    fit_intercept = False # default is True
+    fit_intercept = False  # default is True
     return 'linear SVC/tf-idf', LinearSVC(C=1.0, class_weight=None, fit_intercept=fit_intercept, dual=True,
                                           intercept_scaling=1,
                                           loss='squared_hinge', max_iter=20000, penalty='l2', random_state=random_state,
@@ -236,7 +236,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in [17]: # range(18):
+    for which_classifier in [8, 9, 17]:  # range(18):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
