@@ -118,9 +118,10 @@ def linear_svc_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
     fit_intercept = False  # default is True
+    loss = 'hing' # was 'squared_hinge'
     return 'linear SVC/tf-idf', LinearSVC(C=1.0, class_weight=None, fit_intercept=fit_intercept, dual=True,
                                           intercept_scaling=1,
-                                          loss='squared_hinge', max_iter=20000, penalty='l2', random_state=random_state,
+                                          loss=loss, max_iter=20000, penalty='l2', random_state=random_state,
                                           tol=0.0001, verbose=0, ).fit(X=counts, y=y.values, ).predict(
         X=vectorizer.transform(test, ))
 
