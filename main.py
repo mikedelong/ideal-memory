@@ -22,6 +22,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 
 
 def adaboost_count(x_train, y, test, random_state, ):
@@ -85,6 +86,21 @@ def decision_tree_tf_idf(x_train, y, test, random_state, ):
     counts = vectorizer.fit_transform(x_train.values, )
     return 'tree/tf-idf', DecisionTreeClassifier(random_state=random_state).fit(X=counts, y=y.values, ).predict(
         X=vectorizer.transform(test), )
+
+
+def grad_boost_count(x_train, y, test, random_state, ):
+    vectorizer = CountVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'gradboost/count', GradientBoostingClassifier(loss='deviance', learning_rate=0.1, n_estimators=100,
+                                                         subsample=1.0, criterion='friedman_mse', min_samples_split=2,
+                                                         min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3,
+                                                         min_impurity_decrease=0.0, min_impurity_split=None,
+                                                         init=None, random_state=random_state, max_features=None,
+                                                         verbose=0, max_leaf_nodes=None, warm_start=False,
+                                                         presort='deprecated', validation_fraction=0.1,
+                                                         n_iter_no_change=None, tol=0.0001, ccp_alpha=0.0
+                                                         ).fit(X=counts, y=y.values,
+                                                               ).predict(X=vectorizer.transform(test, ))
 
 
 def k_neighbors_count(x_train, y, test, neighbors, ):
@@ -238,7 +254,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in [17]:  # range(18):
+    for which_classifier in [17, 18, ]:  # range(18):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -282,6 +298,8 @@ if __name__ == '__main__':
                 model_name, y_predicted = linear_svc_count(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 17:
                 model_name, y_predicted = linear_svc_tf_idf(X_train, y_train, X_test, random_state_, )
+            elif which_classifier == 18:
+                model_name, y_predicted = grad_boost_count(X_train, y_train, X_test, random_state_, )
 
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
