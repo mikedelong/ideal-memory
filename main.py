@@ -17,11 +17,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
-from sklearn.svm import LinearSVC
 
 
 def adaboost_count(x_train, y, test, random_state, ):
