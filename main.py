@@ -98,7 +98,7 @@ def grad_boost_count(x_train, y, test, random_state, ):
                                                          init=None, random_state=random_state, max_features=None,
                                                          verbose=0, max_leaf_nodes=None, warm_start=False,
                                                          presort='deprecated', validation_fraction=0.1,
-                                                         n_iter_no_change=None, tol=0.0001, ccp_alpha=0.0
+                                                         n_iter_no_change=None, tol=0.0001,
                                                          ).fit(X=counts, y=y.values,
                                                                ).predict(X=vectorizer.transform(test, ))
 
