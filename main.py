@@ -9,6 +9,7 @@ from time import time
 import pandas as pd
 from numpy import array
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -22,7 +23,6 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 from spam_classifier import SpamClassifier
-from sklearn.ensemble import GradientBoostingClassifier
 
 
 def adaboost_count(x_train, y, test, random_state, ):
