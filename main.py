@@ -91,7 +91,7 @@ def decision_tree_tf_idf(x_train, y, test, random_state, ):
 def grad_boost_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    loss = 'exponential'  # was 'deviance'
+    loss = ['deviance', 'exponential', ][0]
     return 'gradboost/count', GradientBoostingClassifier(criterion='friedman_mse', init=None, learning_rate=0.1,
                                                          loss=loss, max_depth=3, max_features=None, max_leaf_nodes=None,
                                                          min_impurity_decrease=0.0, min_impurity_split=None,
@@ -107,16 +107,17 @@ def grad_boost_count(x_train, y, test, random_state, ):
 def grad_boost_tf_idf(x_train, y, test, random_state, ):
     vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    return 'gradboost/count', GradientBoostingClassifier(loss='deviance', learning_rate=0.1, n_estimators=100,
-                                                         subsample=1.0, criterion='friedman_mse', min_samples_split=2,
-                                                         min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3,
-                                                         min_impurity_decrease=0.0, min_impurity_split=None,
-                                                         init=None, random_state=random_state, max_features=None,
-                                                         verbose=0, max_leaf_nodes=None, warm_start=False,
-                                                         presort='auto', validation_fraction=0.1,
-                                                         n_iter_no_change=None, tol=0.0001,
-                                                         ).fit(X=counts, y=y.values,
-                                                               ).predict(X=vectorizer.transform(test, ))
+    loss = ['deviance', 'exponential', ][0]
+    return 'gradboost/tf-idf', GradientBoostingClassifier(criterion='friedman_mse', init=None, learning_rate=0.1,
+                                                          loss=loss, max_depth=3, max_features=None,
+                                                          max_leaf_nodes=None, min_impurity_decrease=0.0,
+                                                          min_impurity_split=None, min_samples_leaf=1,
+                                                          min_samples_split=2, min_weight_fraction_leaf=0.0,
+                                                          n_estimators=100, n_iter_no_change=None, presort='auto',
+                                                          random_state=random_state, subsample=1.0, tol=0.0001,
+                                                          validation_fraction=0.1, verbose=0, warm_start=False,
+                                                          ).fit(X=counts, y=y.values,
+                                                                ).predict(X=vectorizer.transform(test, ))
 
 
 def k_neighbors_count(x_train, y, test, neighbors, ):
