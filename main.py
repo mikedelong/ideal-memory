@@ -269,7 +269,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in [8, 18, ]:  # range(18):
+    for which_classifier in [8, 18, 19, ]:  # range(20):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
@@ -315,7 +315,8 @@ if __name__ == '__main__':
                 model_name, y_predicted = linear_svc_tf_idf(X_train, y_train, X_test, random_state_, )
             elif which_classifier == 18:
                 model_name, y_predicted = grad_boost_count(X_train, y_train, X_test, random_state_, )
-
+            elif which_classifier == 19:
+                model_name, y_predicted = grad_boost_tf_idf(X_train, y_train, X_test, random_state_, )
             else:
                 raise NotImplementedError('classifier {} is not implemented'.format(which_classifier))
             ones = sum(y_predicted)
