@@ -103,6 +103,21 @@ def grad_boost_count(x_train, y, test, random_state, ):
                                                                ).predict(X=vectorizer.transform(test, ))
 
 
+def grad_boost_tf_idf(x_train, y, test, random_state, ):
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3), )
+    counts = vectorizer.fit_transform(x_train.values, )
+    return 'gradboost/count', GradientBoostingClassifier(loss='deviance', learning_rate=0.1, n_estimators=100,
+                                                         subsample=1.0, criterion='friedman_mse', min_samples_split=2,
+                                                         min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3,
+                                                         min_impurity_decrease=0.0, min_impurity_split=None,
+                                                         init=None, random_state=random_state, max_features=None,
+                                                         verbose=0, max_leaf_nodes=None, warm_start=False,
+                                                         presort='auto', validation_fraction=0.1,
+                                                         n_iter_no_change=None, tol=0.0001,
+                                                         ).fit(X=counts, y=y.values,
+                                                               ).predict(X=vectorizer.transform(test, ))
+
+
 def k_neighbors_count(x_train, y, test, neighbors, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
@@ -254,7 +269,7 @@ if __name__ == '__main__':
     score = -200.0
     best_classifier = ''
     model_name = ''
-    for which_classifier in [17, 18, ]:  # range(18):
+    for which_classifier in [8, 18, ]:  # range(18):
         for random_state_ in random_states:
             X_train, X_test, y_train, y_test = train_test_split(train_df['clean'], train_df['Classification'],
                                                                 random_state=random_state_, test_size=test_size_, )
