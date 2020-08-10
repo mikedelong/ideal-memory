@@ -91,7 +91,8 @@ def decision_tree_tf_idf(x_train, y, test, random_state, ):
 def grad_boost_count(x_train, y, test, random_state, ):
     vectorizer = CountVectorizer(ngram_range=(1, 3), )
     counts = vectorizer.fit_transform(x_train.values, )
-    return 'gradboost/count', GradientBoostingClassifier(loss='deviance', learning_rate=0.1, n_estimators=100,
+    loss = 'exponential'  # was 'deviance'
+    return 'gradboost/count', GradientBoostingClassifier(loss=loss, learning_rate=0.1, n_estimators=100,
                                                          subsample=1.0, criterion='friedman_mse', min_samples_split=2,
                                                          min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3,
                                                          min_impurity_decrease=0.0, min_impurity_split=None,
